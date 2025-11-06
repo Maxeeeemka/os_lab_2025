@@ -1,17 +1,40 @@
-CC=gcc
-CFLAGS=-I.
+CC = gcc
+CFLAGS = -Wall -Werror -O2
+LAUNCHER = launcher
 
-sequential_min_max : utils.o find_min_max.o utils.h find_min_max.h
-	$(CC) -o sequential_min_max find_min_max.o utils.o sequential_min_max.c $(CFLAGS)
+OBJS = find_min_max.o utils.o
 
-parallel_min_max : utils.o find_min_max.o utils.h find_min_max.h
-	$(CC) -o parallel_min_max utils.o find_min_max.o parallel_min_max.c $(CFLAGS)
+SEQ = sequential_min_max
+PAR = parallel_min_max
 
-utils.o : utils.h
-	$(CC) -o utils.o -c utils.c $(CFLAGS)
+all: $(SEQ) $(PAR) $(LAUNCHER)
+	@echo "✅ Сборка всех программ завершена!"
 
-find_min_max.o : utils.h find_min_max.h
-	$(CC) -o find_min_max.o -c find_min_max.c $(CFLAGS)
+$(SEQ): $(OBJS) sequential_min_max.o
+	$(CC) $(CFLAGS) -o $@ $^
 
-clean :
-	rm utils.o find_min_max.o sequential_min_max parallel_min_max
+$(PAR): $(OBJS) parallel_min_max.o
+	$(CC) $(CFLAGS) -o $@ $^
+
+$(LAUNCHER): launcher.o
+	$(CC) $(CFLAGS) -o $@ $^
+
+find_min_max.o: find_min_max.c find_min_max.h utils.h
+	$(CC) $(CFLAGS) -c find_min_max.c
+
+utils.o: utils.c utils.h
+	$(CC) $(CFLAGS) -c utils.c
+
+sequential_min_max.o: sequential_min_max.c find_min_max.h utils.h
+	$(CC) $(CFLAGS) -c sequential_min_max.c
+
+parallel_min_max.o: parallel_min_max.c find_min_max.h utils.h
+	$(CC) $(CFLAGS) -c parallel_min_max.c
+
+launcher.o: launcher.c
+	$(CC) $(CFLAGS) -c launcher.c
+
+clean:
+	rm -f *.o $(SEQ) $(PAR)
+	@echo "🧹 Очистка завершена"
+
