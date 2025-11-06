@@ -1,0 +1,7 @@
+# Игнорируем только бинарники и объектные файлы
+*.o
+*.a
+parallel_sum
+parallel_min_max
+process_memory
+zombie_demo
