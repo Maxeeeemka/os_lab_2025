@@ -1,0 +1,12 @@
+*.o
+*.a
+*.so
+*.out
+*.exe
+revert_static
+revert_dynamic
+
+*.log
+*.tmp
+
+/build/
